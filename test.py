@@ -1,9 +1,9 @@
 
 interval_sampling=1.0
-length_sampling=60
+length_sampling=1200
 
-range_save=500
-int_save=20
+range_save=1000
+int_save=10
 
 import os
 import time
@@ -14,11 +14,6 @@ from publicAPI import CCPublic as CCPublic
 from privateAPI import CCPrivate as CCPrivate
 
 ccpublic = CCPublic()
-
-path_key = 'C:/Users/atiro/Documents/tsa'
-access_key = open(os.path.join(path_key,'access_key.txt')).read()
-secret_key = open(os.path.join(path_key,'secret_key.txt')).read()
-ccprivate = CCPrivate(access_key, secret_key)
 
 # Request order with intervals
 array_order_history=np.ndarray([0,2*range_save])
@@ -77,6 +72,15 @@ heatmap = ax.pcolor(array_order_history)
 #plt.plot(array_order[0],array_order[3])
 
 plt.show()
+
+
+
+## Private API
+
+path_key = 'C:/Users/atiro/Documents/tsa'
+access_key = open(os.path.join(path_key,'access_key.txt')).read()
+secret_key = open(os.path.join(path_key,'secret_key.txt')).read()
+ccprivate = CCPrivate(access_key, secret_key)
 
 # Order sell
 path_orders = '/api/exchange/orders'
