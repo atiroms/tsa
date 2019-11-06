@@ -1,6 +1,6 @@
 
 interval_sampling=1.0
-length_sampling=300
+length_sampling=60
 
 range_save=500
 int_save=20
@@ -24,28 +24,11 @@ ccprivate = CCPrivate(access_key, secret_key)
 ticker=ccpublic.f_ticker()
 
 # Request rate
-rate=ccpublic.f_rate()
-
-# Rate acquisition with time interval
-df_rate=pd.DataFrame(columns=['time','rate'])
-starttime=int(np.ceil(time.time()))
-while True:
-  time.sleep(interval_sampling - ((time.time() - starttime) % interval_sampling))
-  timestamp=int(time.time())
-  if time.time()-starttime>length_sampling:
-    break
-  rate=int(ccpublic.f_ticker()['last'])
-  #ticker=ccpublic.f_ticker()
-  print(str(timestamp)+' '+str(rate))
-  #print(ticker)
-  df_rate.loc[len(df_rate)+1,:]=[timestamp,rate]
-  #time.sleep(1.0 - ((time.time() - starttime) % 1.0))
-
-p=df_rate.plot(x='time',y='rate')
-plt.show()
+rate=int(ccpublic.f_ticker()['last'])
 
 # Request order with intervals
 array_order_history=np.ndarray([0,2*range_save])
+array_rate=np.ndarray([0,2])
 starttime=int(np.ceil(time.time()))
 while True:
   time.sleep(interval_sampling - ((time.time() - starttime) % interval_sampling))
@@ -55,6 +38,7 @@ while True:
   print(str(timestamp-starttime))
 
   rate=int(ccpublic.f_ticker()['last'])
+  array_rate=np.append(array_rate,np.reshape(np.array([timestamp,rate]),(1,2)),axis=0)
   order=ccpublic.f_order()
   df_asks=pd.DataFrame(columns=['rate','amount','accumulate'])
   df_bids=pd.DataFrame(columns=['rate','amount','accumulate'])
