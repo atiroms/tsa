@@ -12,6 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from publicAPI import CCPublic as CCPublic
 from privateAPI import CCPrivate as CCPrivate
+from acquire import Acquire as Acquire
 
 ccpublic = CCPublic()
 
