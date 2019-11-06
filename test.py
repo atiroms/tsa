@@ -20,12 +20,6 @@ access_key = open(os.path.join(path_key,'access_key.txt')).read()
 secret_key = open(os.path.join(path_key,'secret_key.txt')).read()
 ccprivate = CCPrivate(access_key, secret_key)
 
-# Request ticker
-ticker=ccpublic.f_ticker()
-
-# Request rate
-rate=int(ccpublic.f_ticker()['last'])
-
 # Request order with intervals
 array_order_history=np.ndarray([0,2*range_save])
 array_rate=np.ndarray([0,2])
