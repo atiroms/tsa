@@ -1,6 +1,9 @@
 
 interval_sampling=1.0
-length_sampling=10
+length_sampling=300
+
+range_save=500
+int_save=20
 
 import os
 import time
@@ -23,7 +26,7 @@ ticker=ccpublic.f_ticker()
 # Request rate
 rate=ccpublic.f_rate()
 
-# Timer
+# Rate acquisition with time interval
 df_rate=pd.DataFrame(columns=['time','rate'])
 starttime=int(np.ceil(time.time()))
 while True:
@@ -31,16 +34,71 @@ while True:
   timestamp=int(time.time())
   if time.time()-starttime>length_sampling:
     break
-  rate=float(ccpublic.f_rate()['rate'])
+  rate=int(ccpublic.f_ticker()['last'])
   #ticker=ccpublic.f_ticker()
   print(str(timestamp)+' '+str(rate))
   #print(ticker)
-  df_rate.loc[len(df_rate)+1,:]=np.array([timestamp,rate])
+  df_rate.loc[len(df_rate)+1,:]=[timestamp,rate]
   #time.sleep(1.0 - ((time.time() - starttime) % 1.0))
 
 p=df_rate.plot(x='time',y='rate')
 plt.show()
 
+# Request order with intervals
+array_order_history=np.ndarray([0,2*range_save])
+starttime=int(np.ceil(time.time()))
+while True:
+  time.sleep(interval_sampling - ((time.time() - starttime) % interval_sampling))
+  timestamp=int(time.time())
+  if time.time()-starttime>length_sampling:
+    break
+  print(str(timestamp-starttime))
+
+  rate=int(ccpublic.f_ticker()['last'])
+  order=ccpublic.f_order()
+  df_asks=pd.DataFrame(columns=['rate','amount','accumulate'])
+  df_bids=pd.DataFrame(columns=['rate','amount','accumulate'])
+  for value in order['asks']:
+    if len(df_asks)>0:
+      add=[int(float(value[0])),float(value[1]),df_asks.loc[len(df_asks)-1,'accumulate']+float(value[1])]
+    else:
+      add=[int(float(value[0])),float(value[1]),+float(value[1])]
+    df_asks.loc[len(df_asks),:]=add
+
+  for value in order['bids']:
+    if len(df_bids)>0:
+      add=[int(float(value[0])),float(value[1]),df_bids.loc[len(df_bids)-1,'accumulate']+float(value[1])]
+    else:
+      add=[int(float(value[0])),float(value[1]),+float(value[1])]
+    df_bids.loc[len(df_bids),:]=add
+
+  array_order=np.ndarray([4,2*range_save])
+  array_order[0,:]=np.arange(-range_save*int_save,range_save*int_save,int_save)
+  for i in range(range_save):
+    if df_bids.loc[0,'rate']>rate-(range_save-i)*int_save:
+      id_max=max(df_bids.index[df_bids['rate']>rate-(range_save-i)*int_save])
+      array_order[1,i]=-df_bids.loc[id_max,'accumulate']
+    else:
+      array_order[1,i]=0
+
+    if df_asks.loc[0,'rate']<rate+(range_save-i-1)*int_save:
+      id_max=max(df_asks.index[df_asks['rate']<rate+(range_save-i-1)*int_save])
+      array_order[1,2*range_save-i-1]=df_asks.loc[id_max,'accumulate']
+    else:
+      array_order[1,2*range_save-i-1]=0
+
+  fit_order=np.polyfit(array_order[0],array_order[1],1)
+  array_order[2,:]=array_order[1,:]-array_order[0,:]*fit_order[0]
+  sigma=np.std(array_order[2,:])
+  array_order[3,:]=array_order[2,:]/sigma
+
+  array_order_history=np.append(array_order_history,np.reshape(array_order[3,:],(1,range_save*2)),axis=0)
+
+fig, ax = plt.subplots()
+heatmap = ax.pcolor(array_order_history)
+#plt.plot(array_order[0],array_order[3])
+
+plt.show()
 
 # Order sell
 path_orders = '/api/exchange/orders'

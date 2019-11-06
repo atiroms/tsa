@@ -21,11 +21,12 @@ class CCPublic:
     def f_order(self):
         url = 'https://coincheck.com/api/order_books'
         self.order = requests.get(url).json() 
-        for key in self.order.keys():
-            print(key, ":")
-            for value in self.order[key]:
-                print(value)
-            print()
+        #for key in self.order.keys():
+        #    print(key, ":")
+        #    for value in self.order[key]:
+        #        print(value)
+        #    print()
+        return(self.order)
 
     def f_rate(self,amount=1):
         url = 'https://coincheck.com/api/exchange/orders/rate'
