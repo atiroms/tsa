@@ -10,7 +10,7 @@ class CCPublic:
         self.ticker = requests.get(url).json() 
         #for key, item in self.ticker.items():
         #    print("%-9s : %-10.9s " % (key, item))
-        print(self.ticker)
+        #print(self.ticker)
         return self.ticker
 
     def f_transaction(self,offset=100):
