@@ -14,6 +14,10 @@ from publicAPI import CCPublic as CCPublic
 from privateAPI import CCPrivate as CCPrivate
 from acquire import Acquire as Acquire
 
+acquire=Acquire()
+acquire.acquire_order()
+
+
 ccpublic = CCPublic()
 
 # Request order with intervals
