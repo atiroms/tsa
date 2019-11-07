@@ -7,7 +7,11 @@ class CCPublic:
 
     def f_ticker(self):
         url = 'https://coincheck.com/api/ticker'
-        self.ticker = requests.get(url).json() 
+        try:
+            self.ticker = requests.get(url).json()
+        except:
+            self.ticker = False
+
         #for key, item in self.ticker.items():
         #    print("%-9s : %-10.9s " % (key, item))
         #print(self.ticker)
@@ -20,7 +24,10 @@ class CCPublic:
 
     def f_order(self):
         url = 'https://coincheck.com/api/order_books'
-        self.order = requests.get(url).json() 
+        try:
+            self.order = requests.get(url).json()
+        except:
+            self.order = False
         #for key in self.order.keys():
         #    print(key, ":")
         #    for value in self.order[key]:

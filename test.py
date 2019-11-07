@@ -15,7 +15,7 @@ from privateAPI import CCPrivate as CCPrivate
 from acquire import Acquire as Acquire
 
 acquire=Acquire()
-acquire.acquire_order()
+acquire.record_order()
 
 
 ccpublic = CCPublic()
@@ -78,7 +78,10 @@ heatmap = ax.pcolor(array_order_history)
 
 plt.show()
 
-
+try:
+  requests.get('https://coincheck.com/api/ticke').json()
+except:
+  print("error")
 
 ## Private API
 
