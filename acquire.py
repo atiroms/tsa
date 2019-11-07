@@ -46,7 +46,7 @@ class Acquire:
             rate = self.acquire_rate()
             array_asks_add, array_bids_add = self.acquire_order()
 
-            if np.size(rate)>1 and np.size(array_asks_add)>1:
+            if rate!=False and np.size(array_asks_add)>1:
                 array_rate=np.append(array_rate,np.reshape(np.array([timestamp,rate]),(1,2)),axis=0)
                 array_asks=np.append(array_asks,np.reshape(array_asks_add,(1,-1,2)),axis=0)
                 array_bids=np.append(array_bids,np.reshape(array_bids_add,(1,-1,2)),axis=0)
