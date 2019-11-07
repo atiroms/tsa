@@ -16,7 +16,7 @@ from acquire import Acquire as Acquire
 from analyze import Analyze as Analyze
 
 analyze=Analyze()
-analyze.order2carpet()
+analyze.order2band()
 
 acquire=Acquire()
 acquire.record_order()
