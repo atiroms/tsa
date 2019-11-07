@@ -15,7 +15,7 @@ from privateAPI import CCPrivate as CCPrivate
 from acquire import Acquire as Acquire
 
 acquire=Acquire()
-acquire.record_order(1,20,5)
+acquire.record_order()
 
 
 ccpublic = CCPublic()
