@@ -17,6 +17,57 @@ from acquire import Acquire as Acquire
 acquire=Acquire()
 acquire.record_order(1,20,5)
 
+range_rate=1000
+int_rate=10
+
+path_src='C:/Users/atiro/Dropbox/tsa/20191107_161734'
+list_file=os.listdir(path_src)
+list_time_file=list(set([f[:15] for f in list_file]))
+list_time_file.sort()
+for time_file in list_time_file:
+	array_rate=np.load(os.path.join(path_src,time_file+'_rate.npy'))
+	array_asks=np.load(os.path.join(path_src,time_file+'_asks.npy'))
+	array_bids=np.load(os.path.join(path_src,time_file+'_bids.npy'))
+
+	n_time=np.shape(array_rate)[0]
+	array_order=np.ndarray([n_time,3,2*range_rate])
+
+	for idx_time in range(n_time):
+		rate=array_rate[idx_time,1]
+		accum_amount=0.0
+		current_step_rate=0
+		for idx_order in range(np.shape(array_asks)[1]):
+			diff_rate=array_asks[idx_time,idx_order,0]-rate
+			reached_step_rate=int(diff_rate/int_rate)
+			if reached_step_rate>range_rate:
+				reached_step_rate=range_rate
+				array_order[idx_time,0,(range_rate+current_step_rate):(range_rate+reached_step_rate)]=accum_amount
+				break
+			else:
+				array_order[idx_time,0,(range_rate+current_step_rate):(range_rate+reached_step_rate)]=accum_amount
+				current_step_rate=reached_step_rate
+				accum_amount=accum_amount+array_asks[idx_time,idx_order,1]
+				
+		accum_amount=0.0
+		current_step_rate=0
+		for idx_order in range(np.shape(array_bids)[1]):
+			diff_rate=rate-array_bids[idx_time,idx_order,0]
+			reached_step_rate=int(diff_rate/int_rate)
+			if reached_step_rate>range_rate:
+				reached_step_rate=range_rate
+				array_order[idx_time,0,(range_rate-reached_step_rate):(range_rate-current_step_rate)]=-accum_amount
+				break
+			else:
+				array_order[idx_time,0,(range_rate-reached_step_rate):(range_rate-current_step_rate)]=-accum_amount
+				current_step_rate=reached_step_rate
+				accum_amount=accum_amount+array_asks[idx_time,idx_order,1]
+
+fig, ax = plt.subplots()
+heatmap = ax.pcolor(array_order[:,0,:])
+#plt.plot(array_order[0],array_order[3])
+
+plt.show()
+
 
 ccpublic = CCPublic()
 
