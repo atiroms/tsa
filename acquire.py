@@ -12,7 +12,7 @@ class Acquire:
     def __init__(self):
         self.ccpublic = CCPublic()
 
-    def acquire_order(self,interval_sample=10.0,length_sample=None,interval_save=360,path_save='D:/atiroms/Documents/tsa'):
+    def acquire_order(self,interval_sample=10.0,length_sample=None,interval_save=360,path_save='D:/atiroms/Dropbox/tsa'):
         startdatetime="{0:%Y%m%d_%H%M%S}".format(datetime.datetime.now())
         os.mkdir(os.path.join(path_save,startdatetime))
 
