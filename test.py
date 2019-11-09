@@ -15,7 +15,7 @@ from privateAPI import CCPrivate as CCPrivate
 from acquire import Acquire as Acquire
 from analyze import Analyze as Analyze
 
-analyze=Analyze()
+analyze=Analyze(path_src='D:/atiroms/Dropbox/tsa/20191107_161734')
 analyze.order2band()
 
 acquire=Acquire()
