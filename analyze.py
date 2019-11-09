@@ -8,16 +8,14 @@ class Analyze:
         self.path_src=path_src
 
     def order2band(self,range_rate=1000,int_rate=10):
-        array_band_long=np.ndarray([0,2*range_rate])
+
         list_file=os.listdir(self.path_src)
         list_time_file=list(set([f[:15] for f in list_file]))
         list_time_file.sort()
         for time_file in list_time_file:
             if os.path.exists(os.path.join(self.path_src,time_file+'_band.npy')):
                 print(time_file+' already processed.')
-                array_band=np.load(os.path.join(self.path_src,time_file+'_band.npy'))
             else:
-                print(time_file+' starting to process.')
                 array_rate=np.load(os.path.join(self.path_src,time_file+'_rate.npy'))
                 array_asks=np.load(os.path.join(self.path_src,time_file+'_asks.npy'))
                 array_bids=np.load(os.path.join(self.path_src,time_file+'_bids.npy'))
@@ -56,8 +54,18 @@ class Analyze:
                             accum_amount=accum_amount+array_bids[idx_time,idx_order,1]
 
                 np.save(os.path.join(self.path_src,time_file+'_band.npy'),array_band)
+                print(time_file+' processed and saved.')
+
+        print('Combining processed results.')
+        array_band_long=np.ndarray([0,2*range_rate])
+        for time_file in list_time_file:
+            array_band=np.load(os.path.join(self.path_src,time_file+'_band.npy'))
             array_band_long=np.append(array_band_long,array_band,axis=0)
-        fig, ax = plt.subplots()
-        heatmap = ax.pcolor(array_band_long)
+
+        print('Preparing figure.')
+        fig=plt.figure()
+        ax=fig.add_subplot(1,1,1)
+        ax.pcolor(array_band_long,cmap='jet')
         plt.show()
-        return True
+        print('Finished order2band()')
+        return array_band_long

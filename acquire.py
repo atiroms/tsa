@@ -59,7 +59,7 @@ class Acquire:
             print('Ticker access error.')
             return False
         else:
-            return int(self.ccpublic.f_ticker()['last'])
+            return int(ticker['last'])
 
     def acquire_order(self):
         order=self.ccpublic.f_order()
