@@ -13,10 +13,13 @@ import matplotlib.pyplot as plt
 from publicAPI import CCPublic as CCPublic
 from privateAPI import CCPrivate as CCPrivate
 from acquire import Acquire as Acquire
-from analyze import Analyze as Analyze
+from prepare import Prepare as Prepare
 
-analyze=Analyze(path_src='D:/atiroms/Dropbox/tsa/20191107_161734')
-analyze.order2band()
+prepare=Prepare()
+(a,b),(c,d)=prepare.dataset_rate()
+
+prepare=Prepare()
+prepare.order2band()
 
 acquire=Acquire()
 acquire.record_order()
