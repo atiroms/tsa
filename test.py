@@ -14,9 +14,15 @@ from publicAPI import CCPublic as CCPublic
 from privateAPI import CCPrivate as CCPrivate
 from acquire import Acquire as Acquire
 from prepare import Prepare as Prepare
+from analyze import Analyze as Analyze
 
 prepare=Prepare()
-(a,b),(c,d)=prepare.dataset_rate()
+(x_train,y_train),(x_test,y_test)=prepare.dataset_rate()
+
+analyze=Analyze()
+analyze.prep_model()
+analyze.fit_model(x_train,y_train)
+analyze.predict(x_test,y_test)
 
 prepare=Prepare()
 prepare.order2band()

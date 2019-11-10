@@ -1,19 +1,23 @@
 
 import os
 import numpy as np
+import sklearn.preprocessing as skprep
 import matplotlib.pyplot as plt
 
 class Prepare:
     def __init__(self,path_src='C:/Users/atiro/Dropbox/tsa/20191107_161734'):
         self.path_src=path_src
 
-    def dataset_rate(self,n_precede=120,r_test=0.1):
+    def dataset_rate(self,n_sequence=120,r_test=0.1):
+        print('Preparing rate dataset.')
         array_rate=self.read_rate()
-        array_x=np.ndarray([0,n_precede])
+        scaler = skprep.MinMaxScaler(feature_range=(0, 1))
+        array_rate = scaler.fit_transform(array_rate)
+        array_x=np.ndarray([0,n_sequence])
         array_y=np.ndarray([0])
-        for i in range(array_rate.shape[0]-n_precede):
-            array_x=np.append(array_x,array_rate[i:i+n_precede,1].reshape(1,n_precede),axis=0)
-            array_y=np.append(array_y,array_rate[i+n_precede,1].reshape(1),axis=0)
+        for i in range(array_rate.shape[0]-n_sequence):
+            array_x=np.append(array_x,array_rate[i:i+n_sequence,1].reshape(1,n_sequence),axis=0)
+            array_y=np.append(array_y,array_rate[i+n_sequence,1].reshape(1),axis=0)
 
         n_train=int(round(array_y.shape[0]*(1-r_test)))
         x_train=array_x[0:n_train,:]
