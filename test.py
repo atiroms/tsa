@@ -16,13 +16,15 @@ from acquire import Acquire as Acquire
 from prepare import Prepare as Prepare
 from analyze import Analyze as Analyze
 
-prepare=Prepare()
-(x_train,y_train),(x_test,y_test)=prepare.dataset_rate(n_sequence=18,n_resample=60,calc_diff=True)
+prepare=Prepare(path_src='C:/Users/NICT_WS/Dropbox/tsa/20191107_161734')
+(x_train,y_train),(x_test,y_test)=prepare.dataset_rate(n_sequence=60,n_resample=1,
+                                                       calc_diff=True,scale='standard')
 
 analyze=Analyze()
-analyze.prep_model(n_sequence=18)
+analyze.prep_model(n_sequence=60)
 analyze.fit_model(x_train,y_train,n_epoch=100,n_patience=10)
 analyze.predict(x_test,y_test)
+analyze.predict(x_train,y_train)
 
 prepare=Prepare()
 prepare.order2band()

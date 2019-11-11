@@ -13,7 +13,8 @@ class Prepare:
         array_band=self.order2band(range_rate=range_rate,int_rate=int_rate)
         
 
-    def dataset_rate(self,n_sequence=120,n_resample=1,calc_diff=True,start_forward=0,end_forward=1,r_test=0.1):
+    def dataset_rate(self,n_sequence=120,n_resample=1,calc_diff=True,
+                     scale='minmax',start_forward=0,end_forward=1,r_test=0.1):
         print('Preparing rate dataset.')
         array_rate=self.read_rate()[:,1]
         if n_resample>1:
@@ -29,8 +30,14 @@ class Prepare:
                 array_rate_tmp[i]=array_rate[i+1]-array_rate[i]
             array_rate=array_rate_tmp
         array_rate=array_rate.reshape([array_rate.shape[0],1])
-        scaler = skprep.MinMaxScaler(feature_range=(0, 1))
-        array_rate = scaler.fit_transform(array_rate)
+
+        if scale=='minmax':
+            scaler = skprep.MinMaxScaler(feature_range=(0, 1))
+            array_rate = scaler.fit_transform(array_rate)
+        elif scale=='standard':
+            scaler = skprep.StandardScaler(with_mean=False)
+            array_rate = scaler.fit_transform(array_rate)
+
         fig=plt.figure()
         ax=fig.add_subplot(1,1,1)
         ax.plot(np.arange(array_rate.shape[0]),array_rate)
