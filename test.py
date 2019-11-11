@@ -16,6 +16,7 @@ from acquire import Acquire as Acquire
 from prepare import Prepare as Prepare
 from analyze import Analyze as Analyze
 
+<<<<<<< Updated upstream
 prepare=Prepare()
 (x_train,y_train),(x_test,y_test)=prepare.dataset_rate(n_sequence=18,n_resample=60,calc_diff=True)
 
@@ -23,6 +24,21 @@ analyze=Analyze()
 analyze.prep_model(n_sequence=18)
 analyze.fit_model(x_train,y_train,n_epoch=100,n_patience=10)
 analyze.predict(x_test,y_test)
+=======
+prepare=Prepare(path_src='C:/Users/NICT_WS/Dropbox/tsa/20191107_161734')
+(x_train,y_train),(x_test,y_test)=prepare.dataset_rate()
+
+analyze=Analyze()
+analyze.prep_model()
+analyze.fit_model(x_train,y_train)
+y_predict=analyze.predict(x_test,y_test)
+
+fig=plt.figure()
+ax=fig.add_subplot(1,1,1)
+ax.plot(np.arange(0,100,1),y_predict[0:100])
+ax.plot(np.arange(0,100,1),y_test[0:100])
+plt.show()
+>>>>>>> Stashed changes
 
 prepare=Prepare()
 prepare.order2band()
