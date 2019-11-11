@@ -17,7 +17,7 @@ from prepare import Prepare as Prepare
 from analyze import Analyze as Analyze
 
 prepare=Prepare()
-(x_train,y_train),(x_test,y_test)=prepare.dataset_rate()
+(x_train,y_train),(x_test,y_test)=prepare.dataset_rate(n_resample=6,calc_diff=False)
 
 analyze=Analyze()
 analyze.prep_model()

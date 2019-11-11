@@ -8,9 +8,16 @@ class Prepare:
     def __init__(self,path_src='C:/Users/atiro/Dropbox/tsa/20191107_161734'):
         self.path_src=path_src
 
-    def dataset_rate(self,n_sequence=120,calc_diff=True,start_forward=0,end_forward=1,r_test=0.1):
+    def dataset_rate(self,n_sequence=120,n_resample=1,calc_diff=True,start_forward=0,end_forward=1,r_test=0.1):
         print('Preparing rate dataset.')
         array_rate=self.read_rate()[:,1]
+        if n_resample>1:
+            step_resample=int(array_rate.shape[0]/n_resample)
+            array_rate_tmp=np.ndarray([step_resample])
+            for i in range(step_resample):
+                array_rate_tmp[i]=array_rate[i*n_resample:(i+1)*n_resample].mean()
+            array_rate=array_rate_tmp
+
         if calc_diff:
             for i in range(array_rate.shape[0]-1):
                 array_rate[i+1]=array_rate[i+1]-array_rate[i]
