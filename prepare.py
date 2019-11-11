@@ -19,9 +19,10 @@ class Prepare:
             array_rate=array_rate_tmp
 
         if calc_diff:
+            array_rate_tmp=np.ndarray([array_rate.shape[0]-1])
             for i in range(array_rate.shape[0]-1):
-                array_rate[i+1]=array_rate[i+1]-array_rate[i]
-            array_rate=array_rate[1:]
+                array_rate_tmp[i]=array_rate[i+1]-array_rate[i]
+            array_rate=array_rate_tmp
         array_rate=array_rate.reshape([array_rate.shape[0],1])
         scaler = skprep.MinMaxScaler(feature_range=(0, 1))
         array_rate = scaler.fit_transform(array_rate)

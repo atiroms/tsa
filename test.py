@@ -17,11 +17,11 @@ from prepare import Prepare as Prepare
 from analyze import Analyze as Analyze
 
 prepare=Prepare()
-(x_train,y_train),(x_test,y_test)=prepare.dataset_rate(n_resample=6,calc_diff=False)
+(x_train,y_train),(x_test,y_test)=prepare.dataset_rate(n_sequence=18,n_resample=60,calc_diff=True)
 
 analyze=Analyze()
-analyze.prep_model()
-analyze.fit_model(x_train,y_train)
+analyze.prep_model(n_sequence=18)
+analyze.fit_model(x_train,y_train,n_epoch=100,n_patience=10)
 analyze.predict(x_test,y_test)
 
 prepare=Prepare()

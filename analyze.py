@@ -22,11 +22,11 @@ class Analyze():
         self.model=model
         return True
 
-    def fit_model(self,x_train,y_train,n_batch=600,n_epoch=15,r_validation=0.05):
+    def fit_model(self,x_train,y_train,n_batch=600,n_epoch=15,r_validation=0.05,n_patience=2):
         print('Fitting model.')
         # reshape input to be 3D [samples, timesteps, features]
         x_train=x_train.reshape(x_train.shape[0],x_train.shape[1],1)
-        early_stopping = kcallbacks.EarlyStopping(monitor='val_loss', patience=2)
+        early_stopping = kcallbacks.EarlyStopping(monitor='val_loss', patience=n_patience)
         self.model.fit(x_train, y_train, batch_size=n_batch, epochs=n_epoch, validation_split=r_validation, callbacks=[early_stopping]) 
         return True
 
