@@ -8,16 +8,26 @@ class Prepare:
     def __init__(self,path_src='C:/Users/atiro/Dropbox/tsa/20191107_161734'):
         self.path_src=path_src
 
-    def dataset_rate(self,n_sequence=120,r_test=0.1):
+    def dataset_rate(self,n_sequence=120,calc_diff=True,start_forward=0,end_forward=1,r_test=0.1):
         print('Preparing rate dataset.')
-        array_rate=self.read_rate()
+        array_rate=self.read_rate()[:,1]
+        if calc_diff:
+            for i in range(array_rate.shape[0]-1):
+                array_rate[i+1]=array_rate[i+1]-array_rate[i]
+            array_rate=array_rate[1:]
+        array_rate=array_rate.reshape([array_rate.shape[0],1])
         scaler = skprep.MinMaxScaler(feature_range=(0, 1))
         array_rate = scaler.fit_transform(array_rate)
+        fig=plt.figure()
+        ax=fig.add_subplot(1,1,1)
+        ax.plot(np.arange(array_rate.shape[0]),array_rate)
+        plt.show()
+
         array_x=np.ndarray([0,n_sequence])
         array_y=np.ndarray([0])
-        for i in range(array_rate.shape[0]-n_sequence):
-            array_x=np.append(array_x,array_rate[i:i+n_sequence,1].reshape(1,n_sequence),axis=0)
-            array_y=np.append(array_y,array_rate[i+n_sequence,1].reshape(1),axis=0)
+        for i in range(array_rate.shape[0]-n_sequence-end_forward+1):
+            array_x=np.append(array_x,array_rate[i:i+n_sequence,0].reshape(1,n_sequence),axis=0)
+            array_y=np.append(array_y,array_rate[i+n_sequence+start_forward:i+n_sequence+end_forward,0].mean().reshape(1),axis=0)
 
         n_train=int(round(array_y.shape[0]*(1-r_test)))
         x_train=array_x[0:n_train,:]
