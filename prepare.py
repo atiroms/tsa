@@ -8,6 +8,11 @@ class Prepare:
     def __init__(self,path_src='C:/Users/atiro/Dropbox/tsa/20191107_161734'):
         self.path_src=path_src
 
+    def dataset_band(self,range_rate=1000,int_rate=10):
+        print('Preparing order band dataset')
+        array_band=self.order2band(range_rate=range_rate,int_rate=int_rate)
+        
+
     def dataset_rate(self,n_sequence=120,n_resample=1,calc_diff=True,start_forward=0,end_forward=1,r_test=0.1):
         print('Preparing rate dataset.')
         array_rate=self.read_rate()[:,1]
@@ -61,7 +66,7 @@ class Prepare:
         return array_rate_long
 
 
-    def order2band(self,range_rate=1000,int_rate=10):
+    def order2band(self,range_rate=1000,int_rate=10,out_fig=False):
         list_file=os.listdir(self.path_src)
         list_time_file=list(set([f[:15] for f in list_file]))
         list_time_file.sort()
@@ -115,10 +120,12 @@ class Prepare:
             array_band=np.load(os.path.join(self.path_src,time_file+'_band.npy'))
             array_band_long=np.append(array_band_long,array_band,axis=0)
 
-        print('Preparing figure.')
-        fig=plt.figure()
-        ax=fig.add_subplot(1,1,1)
-        ax.pcolor(array_band_long,cmap='jet')
-        plt.show()
+        if out_fig:
+            print('Preparing figure.')
+            fig=plt.figure()
+            ax=fig.add_subplot(1,1,1)
+            ax.pcolor(array_band_long,cmap='jet')
+            plt.show()
         print('Finished order2band()')
+
         return array_band_long
