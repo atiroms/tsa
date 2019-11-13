@@ -38,7 +38,8 @@ class Prepare:
 
         fig=plt.figure()
         ax=fig.add_subplot(1,1,1)
-        ax.pcolor(array_band,cmap='jet')
+        #ax.pcolor(array_band,cmap='jet')
+        ax.pcolor(array_band[:100,:],cmap='jet')
         plt.show()
 
         # reshape x to be 3D [samples, timesteps, features(rate difference)]
@@ -52,7 +53,7 @@ class Prepare:
         x_train=array_x[0:n_train,:,:]
         x_test=array_x[n_train:,:]
 
-        (_,y_train),(_,y_test)=dataset_rate(self,n_sequence=n_sequence,n_resample=n_resample,calc_diff=True,
+        (_,y_train),(_,y_test)=self.dataset_rate(n_sequence=n_sequence,n_resample=n_resample,calc_diff=True,
                                             scale=scale,start_forward=start_forward,end_forward=end_forward,r_test=r_test)
 
         return (x_train,y_train),(x_test,y_test)
