@@ -8,10 +8,54 @@ class Prepare:
     def __init__(self,path_src='C:/Users/atiro/Dropbox/tsa/20191107_161734'):
         self.path_src=path_src
 
-    def dataset_band(self,range_rate=1000,int_rate=10):
+    def dataset_band(self,range_rate=1000,int_rate=10,
+                     n_sequence=120,n_resample=1,calc_diff=True,
+                     scale='minmax',start_forward=0,end_forward=1,r_test=0.1):
         print('Preparing order band dataset')
         array_band=self.order2band(range_rate=range_rate,int_rate=int_rate)
-        
+        # array_band is in 2D [timestemps, features(rate difference)]
+
+        if n_resample>1:
+            step_resample=int(array_band.shape[0]/n_resample)
+            array_band_tmp=np.ndarray([step_resample,array_band.shape[1]])
+            for i in range(step_resample):
+                array_band_tmp[i,:]=array_band[i*n_resample:(i+1)*n_resample,:].mean(axis=0,keepdims=True)
+            array_band=array_band_tmp
+
+        if calc_diff:
+            array_band_tmp=np.ndarray([array_band.shape[0]-1,array_band.shape[1]])
+            for i in range(array_band.shape[0]-1):
+                array_band_tmp[i,:]=array_band[i+1,:]-array_band[i,:]
+            array_band=array_band_tmp
+
+        if scale=='minmax':
+            min_band=array_band.min()
+            max_band=array_band.max()
+            array_band=(array_band-min_band)/(max_band-min_band)
+        elif scale=='standard':
+            std_band=array_band.std()
+            array_band=array_band/std_band
+
+        fig=plt.figure()
+        ax=fig.add_subplot(1,1,1)
+        ax.pcolor(array_band,cmap='jet')
+        plt.show()
+
+        # reshape x to be 3D [samples, timesteps, features(rate difference)]
+        array_x=np.ndarray([0,n_sequence,array_band.shape[1]])
+        #array_y=np.ndarray([0])
+        for i in range(array_band.shape[0]-n_sequence-end_forward+1):
+            array_x=np.append(array_x,array_band[i:i+n_sequence,:].reshape(1,n_sequence,array_band.shape[1]),axis=0)
+            #array_y=np.append(array_y,array_rate[i+n_sequence+start_forward:i+n_sequence+end_forward,0].mean().reshape(1),axis=0)
+
+        n_train=int(round(array_x.shape[0]*(1-r_test)))
+        x_train=array_x[0:n_train,:,:]
+        x_test=array_x[n_train:,:]
+
+        (_,y_train),(_,y_test)=dataset_rate(self,n_sequence=n_sequence,n_resample=n_resample,calc_diff=True,
+                                            scale=scale,start_forward=start_forward,end_forward=end_forward,r_test=r_test)
+
+        return (x_train,y_train),(x_test,y_test)
 
     def dataset_rate(self,n_sequence=120,n_resample=1,calc_diff=True,
                      scale='minmax',start_forward=0,end_forward=1,r_test=0.1):

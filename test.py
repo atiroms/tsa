@@ -17,6 +17,10 @@ from prepare import Prepare as Prepare
 from analyze import Analyze as Analyze
 
 prepare=Prepare(path_src='C:/Users/NICT_WS/Dropbox/tsa/20191107_161734')
+
+(x_train,y_train),(x_test,y_test)=prepare.dataset_band(n_sequence=60,n_resample=1,
+                                                       calc_diff=True,scale='standard')
+
 (x_train,y_train),(x_test,y_test)=prepare.dataset_rate(n_sequence=60,n_resample=1,
                                                        calc_diff=True,scale='standard')
 
