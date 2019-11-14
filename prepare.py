@@ -34,7 +34,7 @@ class Prepare:
             array_band=(array_band-min_band)/(max_band-min_band)
         elif scale=='standard':
             std_band=array_band.std()
-            array_band=array_band/std_band
+            array_band=array_band/(std_band*2)
 
         fig=plt.figure()
         ax=fig.add_subplot(1,1,1)
@@ -80,8 +80,10 @@ class Prepare:
             scaler = skprep.MinMaxScaler(feature_range=(0, 1))
             array_rate = scaler.fit_transform(array_rate)
         elif scale=='standard':
-            scaler = skprep.StandardScaler(with_mean=False)
-            array_rate = scaler.fit_transform(array_rate)
+            #scaler = skprep.StandardScaler(with_mean=False)
+            #array_rate = scaler.fit_transform(array_rate)
+            std_array=array_rate.std()
+            array_rate=array_rate/(std_array*2)
 
         fig=plt.figure()
         ax=fig.add_subplot(1,1,1)
