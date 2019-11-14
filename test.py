@@ -25,7 +25,7 @@ prepare=Prepare(path_src='C:/Users/NICT_WS/Dropbox/tsa/20191107_161734')
                                                        calc_diff=True,scale='standard')
 
 analyze=Analyze()
-analyze.prep_model(n_sequence=60)
+analyze.prep_model(x_train,y_train)
 analyze.fit_model(x_train,y_train,n_epoch=100,n_patience=10)
 a=analyze.predict(x_test,y_test)
 #analyze.predict(x_train,y_train)
