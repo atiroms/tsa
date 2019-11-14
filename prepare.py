@@ -51,7 +51,7 @@ class Prepare:
 
         n_train=int(round(array_x.shape[0]*(1-r_test)))
         x_train=array_x[0:n_train,:,:]
-        x_test=array_x[n_train:,:]
+        x_test=array_x[n_train:,:,:]
 
         (_,y_train),(_,y_test)=self.dataset_rate(n_sequence=n_sequence,n_resample=n_resample,calc_diff=True,
                                             scale=scale,start_forward=start_forward,end_forward=end_forward,r_test=r_test)
@@ -88,16 +88,17 @@ class Prepare:
         ax.plot(np.arange(array_rate.shape[0]),array_rate)
         plt.show()
 
-        array_x=np.ndarray([0,n_sequence])
+        # reshape data to be 3D [samples, timesteps, features]
+        array_x=np.ndarray([0,n_sequence,1])
         array_y=np.ndarray([0])
         for i in range(array_rate.shape[0]-n_sequence-end_forward+1):
-            array_x=np.append(array_x,array_rate[i:i+n_sequence,0].reshape(1,n_sequence),axis=0)
+            array_x=np.append(array_x,array_rate[i:i+n_sequence,0].reshape(1,n_sequence,1),axis=0)
             array_y=np.append(array_y,array_rate[i+n_sequence+start_forward:i+n_sequence+end_forward,0].mean().reshape(1),axis=0)
 
         n_train=int(round(array_y.shape[0]*(1-r_test)))
-        x_train=array_x[0:n_train,:]
+        x_train=array_x[0:n_train,:,:]
         y_train=array_y[0:n_train]
-        x_test=array_x[n_train:,:]
+        x_test=array_x[n_train:,:,:]
         y_test=array_y[n_train:]
         
         return (x_train,y_train),(x_test,y_test)
