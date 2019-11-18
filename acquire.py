@@ -6,9 +6,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from publicAPI import CCPublic as CCPublic
 
-ccpublic = CCPublic()
 
-class Acquire:
+class AcquireCC:
     def __init__(self):
         self.ccpublic = CCPublic()
 

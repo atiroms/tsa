@@ -59,7 +59,7 @@ class Prepare:
         return (x_train,y_train),(x_test,y_test)
 
     def dataset_rate(self,n_sequence=120,n_resample=1,calc_diff=True,
-                     scale='minmax',start_forward=0,end_forward=1,r_test=0.1):
+                     scale='minmax',start_forward=0,end_forward=1,threshold=None,r_test=0.1):
         print('Preparing rate dataset.')
         array_rate=self.read_rate()[:,1]
         if n_resample>1:
@@ -96,6 +96,13 @@ class Prepare:
         for i in range(array_rate.shape[0]-n_sequence-end_forward+1):
             array_x=np.append(array_x,array_rate[i:i+n_sequence,0].reshape(1,n_sequence,1),axis=0)
             array_y=np.append(array_y,array_rate[i+n_sequence+start_forward:i+n_sequence+end_forward,0].mean().reshape(1),axis=0)
+
+        # convert y into categories (valid only when rate difference is calculated)
+        if calc_diff:
+            if threshold is not None:
+                array_y[np.where(array_y>=threshold)]=1
+                array_y[np.where(array_y<(-1)*threshold)]=-1
+                array_y[np.intersect1d(np.where(array_y>=(-1)*threshold),np.where(array_y<threshold))]=0
 
         n_train=int(round(array_y.shape[0]*(1-r_test)))
         x_train=array_x[0:n_train,:,:]
