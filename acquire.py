@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from publicAPI import CCPublic as CCPublic
 
 
-class AcquireCC:
+class Acquire:
     def __init__(self):
         self.ccpublic = CCPublic()
 
