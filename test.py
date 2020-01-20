@@ -18,6 +18,9 @@ path_src='D:/atiroms/Dropbox/tsa/20191110_120804'
 
 prepare=Prepare(path_src=path_src)
 array_rate=prepare.read_rate()
+analyze=Analyze()
+array_rp=analyze.moving_average_multi(array_rate)
+#array_average,r_cor,p_cor=analyze.moving_average(array_rate)
 
 ######
 interval_sampling=1.0

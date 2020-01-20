@@ -113,6 +113,7 @@ class Prepare:
         return (x_train,y_train),(x_test,y_test)
 
     def read_rate(self):
+        print('Reading rate data.')
         list_file=os.listdir(self.path_src)
         list_time_file=list(set([f[:15] for f in list_file]))
         list_time_file.sort()
