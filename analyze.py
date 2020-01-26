@@ -9,7 +9,29 @@ import matplotlib.pyplot as plt
 class Analyze():
     def __init__(self):
         return None
-    
+
+    def predict_range(self,array_rate,time_forward=10):
+        print('Calculating future range for ',str(time_forward),' points.')
+        # arry_rate is in N x 2 shape (Columns: timepoint, rate)
+        array_range=np.zeros([np.shape(array_rate)[0],3])
+        array_range[:,:]=np.nan
+        for time in range(np.shape(array_rate)[0]-time_forward):
+            array_range[time,0]=min(array_rate[(time+1):(time+time_forward+1),1])-array_rate[time,1]
+            array_range[time,1]=np.average(array_rate[(time+1):(time+time_forward+1),1])-array_rate[time,1]
+            array_range[time,2]=max(array_rate[(time+1):(time+time_forward+1),1])-array_rate[time,1]
+        array_range=np.concatenate([array_rate,array_range],axis=1)
+        array_range=array_range[:,[0,2,3,4]]
+        # array_range is in N x 4 shape
+        # (Columns: timepoint, min, mean, max)
+
+        fig=plt.figure()
+        ax=fig.add_subplot(1,1,1)
+        ax.plot(array_range[:,0],array_range[:,1])
+        ax.plot(array_range[:,0],array_range[:,2])
+        ax.plot(array_range[:,0],array_range[:,3])
+        plt.show()
+        return(array_range)
+
     def moving_average(self,array_rate,range_average=60):
         print('Calculating moving average over ',str(range_average),' points.')
         # arry_rate is in N x 2 shape (Columns: timepoint, rate)

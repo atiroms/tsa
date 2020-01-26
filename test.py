@@ -19,7 +19,8 @@ path_src='D:/atiroms/Dropbox/tsa/20191110_120804'
 prepare=Prepare(path_src=path_src)
 array_rate=prepare.read_rate()
 analyze=Analyze()
-array_rp=analyze.moving_average_multi(array_rate)
+array_range=analyze.predict_range(array_rate,100)
+#array_rp=analyze.moving_average_multi(array_rate)
 #array_average,r_cor,p_cor=analyze.moving_average(array_rate)
 
 ######
@@ -55,7 +56,8 @@ acquire.record_order()
 
 ## Private API
 
-path_key = 'C:/Users/atiro/Documents/tsa'
+#path_key = 'C:/Users/atiro/Documents/tsa'
+path_key = 'D:/atiroms/Documents/tsa'
 access_key = open(os.path.join(path_key,'access_key.txt')).read()
 secret_key = open(os.path.join(path_key,'secret_key.txt')).read()
 ccprivate = CCPrivate(access_key, secret_key)
@@ -66,12 +68,21 @@ params = {
     "pair": "btc_jpy",
     "order_type": "sell",
     "rate": 1000000,
-    "amount": 0.01,
+    "amount": 0.005,
 }
 result = ccprivate.post(path_orders, params)
 print(result)
 
 # Order buy
+path_orders = '/api/exchange/orders'
+params = {
+    "pair": "btc_jpy",
+    "order_type": "buy",
+    "rate": 800000,
+    "amount": 0.005,
+}
+result = ccprivate.post(path_orders, params)
+print(result)
 
 # List orders
 path_orders_opens = '/api/exchange/orders/opens'
