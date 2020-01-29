@@ -24,11 +24,16 @@ class Analyze():
         # array_range is in N x 4 shape
         # (Columns: timepoint, min, mean, max)
 
+        range_90=max(np.percentile(array_range[:-time_forward,3],90),-np.percentile(array_range[:-time_forward,1],10))
         fig=plt.figure()
-        ax=fig.add_subplot(1,1,1)
-        ax.plot(array_range[:,0],array_range[:,1])
-        ax.plot(array_range[:,0],array_range[:,2])
-        ax.plot(array_range[:,0],array_range[:,3])
+        ax1=fig.add_subplot(3,2,1)
+        ax1.hist(array_range[:-time_forward,1],bins=50,range=(-range_90,range_90))
+        ax3=fig.add_subplot(3,2,3)
+        ax3.hist(array_range[:-time_forward,2],bins=50,range=(-range_90,range_90))
+        ax5=fig.add_subplot(3,2,5)
+        ax5.hist(array_range[:-time_forward,3],bins=50,range=(-range_90,range_90))
+        ax2=fig.add_subplot(3,2,2)
+        ax2.scatter(array_range[:-time_forward,1],array_range[:-time_forward,3])
         plt.show()
         return(array_range)
 
